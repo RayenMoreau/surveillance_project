@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IoT Surveillance Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f0f0f0; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header { background: #333; color: white; padding: 15px; border-radius: 5px; }
+        .video-container { background: white; padding: 15px; border-radius: 5px; margin: 20px 0; }
+        .video-feed { width: 100%; max-width: 640px; height: auto; border: 2px solid #333; }
+        .controls { margin: 10px 0; }
+        .btn { padding: 10px 20px; margin: 5px; border: none; border-radius: 3px; cursor: pointer; }
+        .btn-success { background: #28a745; color: white; }
+        .btn-danger { background: #dc3545; color: white; }
+        .btn-primary { background: #007bff; color: white; }
+        .logs-container { background: white; padding: 15px; border-radius: 5px; margin: 20px 0; }
+        .log-entry { padding: 10px; margin: 5px 0; border-left: 4px solid #ccc; }
+        .log-success { border-left-color: #28a745; background: #d4edda; }
+        .log-danger { border-left-color: #dc3545; background: #f8d7da; }
+        .register-form { background: white; padding: 15px; border-radius: 5px; margin: 20px 0; }
+        .form-group { margin: 10px 0; }
+        input[type="text"], input[type="file"] { width: 100%; padding: 8px; margin: 5px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>IoT Surveillance Dashboard</h1>
+            <p>Live Face Recognition & Access Control</p>
+        </div>
+
+        <div class="video-container">
+            <h2>Live Feed</h2>
+            {% if streaming %}
+                <img src="{{ url_for('video_feed') }}" class="video-feed" alt="Live Video">
+            {% else %}
+                <p style="text-align: center; padding: 50px; background: #ddd;">Stream Offline</p>
+            {% endif %}
+            
+            <div class="controls">
+                {% if not streaming %}
+                    <a href="{{ url_for('start_stream') }}" class="btn btn-success">Start Stream</a>
+                {% else %}
+                    <a href="{{ url_for('stop_stream') }}" class="btn btn-danger">Stop Stream</a>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="register-form">
+            <h3>Register New Face</h3>
+            <form action="{{ url_for('register_face') }}" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label>Name:</label>
+                    <input type="text" name="name" required placeholder="Enter person's name">
+                </div>
+                <div class="form-group">
+                    <label>Photo:</label>
+                    <input type="file" name="image" accept="image/*" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Register Face</button>
+            </form>
+        </div>
+
+        <div class="logs-container">
+            <h3>Access Logs</h3>
+            <div id="logs">
+                {% for log in logs %}
+                    <div class="log-entry {% if log[2] %}log-success{% else %}log-danger{% endif %}">
+                        <strong>{{ log[0] or 'Unknown' }}</strong> - 
+                        {{ log[1] }} - 
+                        {% if log[2] %}✅ Access Granted{% else %}🚨 Unknown Person{% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="logs-container">
+            <h3>Registered People</h3>
+            <ul>
+                {% for person in people %}
+                    <li>{{ person[1] }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Auto-refresh logs every 5 seconds
+        setInterval(function() {
+            fetch('/get_logs')
+                .then(response => response.json())
+                .then(data => {
+                    const logsContainer = document.getElementById('logs');
+                    logsContainer.innerHTML = data.map(log => `
+                        <div class="log-entry ${log.access_granted ? 'log-success' : 'log-danger'}">
+                            <strong>${log.name}</strong> - 
+                            ${log.timestamp} - 
+                            ${log.access_granted ? '✅ Access Granted' : '🚨 Unknown Person'}
+                        </div>
+                    `).join('');
+                });
+        }, 5000);
+    </script>
+</body>
+</html>
