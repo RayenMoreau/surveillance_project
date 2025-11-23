@@ -129,11 +129,14 @@ python app.py &
 | High CPU usage            | Increase `FRAME_SKIP` to 20-30 in `config.py`                          |
 
 📊 Performance Metrics
+
 Raspberry Pi 4: 2-3 FPS processing, 15% CPU usage
 Detection Latency: <500ms from capture to notification
 Database: 10,000+ logs with sub-second query times
 Memory: ~300MB RAM usage on Pi 4
+
 🔄 Future Enhancements
+
 [ ] Multi-camera support: Track across zones
 [ ] Face liveness detection: Prevent photo spoofing with eye-blink analysis
 [ ] Time-based access: Restrict entry by schedule
@@ -141,8 +144,12 @@ Memory: ~300MB RAM usage on Pi 4
 [ ] Cloud backup: Sync logs to AWS S3/Google Drive
 [ ] Mobile app: React Native dashboard
 [ ] Model fine-tuning: Retrain on custom faces for better accuracy
+
 📄 License
+
 MIT License - Free for personal and academic use.
+
 🤝 Contributing
+
 Pull requests welcome for optimizations and new features!
 
