@@ -6,12 +6,12 @@ class Config:
     DATABASE_PATH = os.path.join(os.path.dirname(__file__), 'database/access_logs.db')
     
     # Telegram Bot (Get from BotFather)
-    TELEGRAM_BOT_TOKEN = '8045911193:AAFXu-G5TxWefOnG8uoBI3j8p376iYIc9-Y'
-    TELEGRAM_CHAT_ID = '8402390960'  # Use get_chat_id.py to find this
+    TELEGRAM_BOT_TOKEN = 'XX'
+    TELEGRAM_CHAT_ID = 'XX'  # Use get_chat_id.py to find this
     
     # Camera settings
     USE_WEBCAM = True  # Set True for WSL2 streaming, False for video file
-    WEBCAM_URL = 'http://172.27.240.1:8080/video'  # Your Windows IP from above
+    WEBCAM_URL = 'http://172.XX.XX.X:8080/video'  # Your Windows IP from above
     VIDEO_PATH = 'test_video.mp4'  # Fallback video for testing
     
     # Face recognition
