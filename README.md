@@ -19,6 +19,7 @@ Real-time facial recognition system for Raspberry Pi with web dashboard, SQLite 
 - **Notification Cooldown**: Prevents spam with intelligent duplicate detection
 
 ## 🏗️ Architecture
+```nohighlight
 ┌─────────────────────────────────────────────────────────────┐
 │                    Video Input (CSI/USB)                    │
 └──────────────────────┬──────────────────────────────────────┘
@@ -40,8 +41,9 @@ Real-time facial recognition system for Raspberry Pi with web dashboard, SQLite 
 │  Flask Web   │                │  Mobile Device │
 │  Dashboard   │                │  (Your Phone)  │
 └──────────────┘                └────────────────┘
-
+```
 ## 📂 Project Structure
+```nohighlight
 surveillance_project/
 ├── app.py                    # Flask web server
 ├── camera.py                 # Camera abstraction (PiCamera2/OpenCV)
@@ -58,67 +60,77 @@ surveillance_project/
 │   └── dashboard.html        # Web UI template
 ├── uploads/                  # Temporary uploads
 └── venv/                     # Python virtual environment
-
-## ⚙️ Configuration
+```
+##  Configuration
 
 Edit `config.py` before running:
 
-USE_WEBCAM = True          # True for Pi camera, False for video file
-WEBCAM_URL = 0             # Camera index (0 for Pi CSI)
-VIDEO_PATH = 'test_video.mp4'
-TELEGRAM_BOT_TOKEN = 'YOUR_BOT_TOKEN'
-TELEGRAM_CHAT_ID = 'YOUR_CHAT_ID'
-FRAME_SKIP = 15            # Process every Nth frame (reduce CPU)
-NOTIFICATION_COOLDOWN = 30 # Seconds between duplicate alerts
+USE_WEBCAM = True          # True for Pi camera, False for video file\
+WEBCAM_URL = 0             # Camera index (0 for Pi CSI)\
+VIDEO_PATH = 'test_video.mp4'\
+TELEGRAM_BOT_TOKEN = 'YOUR_BOT_TOKEN'\
+TELEGRAM_CHAT_ID = 'YOUR_CHAT_ID'\
+FRAME_SKIP = 15            # Process every Nth frame (reduce CPU)\
+NOTIFICATION_COOLDOWN = 30 # Seconds between duplicate alerts\
 FACE_TOLERANCE = 0.55      # Lower = stricter recognition
 
 🚀 Setup Instructions
 Option A: Development on WSL2/PC
-# 1. Clone repository
+1. Clone repository
+```
 git clone https://github.com/YOUR_USERNAME/surveillance-project.git
 cd surveillance-project
-
-# 2. Create virtual environment
+```
+2. Create virtual environment
+```
 python3 -m venv venv
 source venv/bin/activate
-
-# 3. Install dependencies
+```
+3. Install dependencies
+```
 pip install numpy
 pip install face_recognition flask python-telegram-bot opencv-python
+```
+4. Configure Telegram
+ - Get token from @BotFather
+ - Run: python get_chat_id.py
+ - Update config.py
 
-# 4. Configure Telegram
-# - Get token from @BotFather
-# - Run: python get_chat_id.py
-# - Update config.py
-
-# 5. Run development server
+5. Run development server
+```
 python app.py
-# Access: http://localhost:5000
+```
+Access: http://localhost:5000
 
 Option B: Deployment on Raspberry Pi
-# 1. Enable camera
+ 1. Enable camera
 sudo raspi-config → Interface Options → Camera → Enable
 
-# 2. Install system packages
+ 2. Install system packages
+```
 sudo apt update
 sudo apt install -y python3-pip libatlas-base-dev cmake python3-dev
-
-# 3. Clone & setup
+```
+ 3. Clone & setup
+```
 git clone https://github.com/YOUR_USERNAME/surveillance-project.git
 cd surveillance-project
 python3 -m venv venv
 source venv/bin/activate
-
-# 4. Install packages (dlib will compile ~20-40 min)
+```
+ 4. Install packages (dlib will compile ~20-40 min)
+```
 pip install numpy
 pip install dlib face_recognition --no-cache-dir
 pip install flask python-telegram-bot opencv-python
-
-# 5. Configure & run
+```
+ 5. Configure & run
+```
 nano config.py  # Update WEBCAM_URL=0, TELEGRAM tokens
 python app.py &
-
-🔧 Troubleshooting
+```
+ Troubleshooting
+ ```nohighlight
 | Issue                     | Solution                                                               |
 | ------------------------- | ---------------------------------------------------------------------- |
 | `camera failed`           | Increase GPU memory to 128MB in `/boot/firmware/config.txt`            |
@@ -127,29 +139,6 @@ python app.py &
 | No Telegram notifications | Run `python get_chat_id.py` after messaging the bot                    |
 | Black stream in VNC       | Use SSH tunnel: `ssh -L 5000:localhost:5000 pi@<ip>`                   |
 | High CPU usage            | Increase `FRAME_SKIP` to 20-30 in `config.py`                          |
+```
 
-📊 Performance Metrics
-
-Raspberry Pi 4: 2-3 FPS processing, 15% CPU usage
-Detection Latency: <500ms from capture to notification
-Database: 10,000+ logs with sub-second query times
-Memory: ~300MB RAM usage on Pi 4
-
-🔄 Future Enhancements
-
-[ ] Multi-camera support: Track across zones
-[ ] Face liveness detection: Prevent photo spoofing with eye-blink analysis
-[ ] Time-based access: Restrict entry by schedule
-[ ] MQTT integration: Connect to Home Assistant
-[ ] Cloud backup: Sync logs to AWS S3/Google Drive
-[ ] Mobile app: React Native dashboard
-[ ] Model fine-tuning: Retrain on custom faces for better accuracy
-
-📄 License
-
-MIT License - Free for personal and academic use.
-
-🤝 Contributing
-
-Pull requests welcome for optimizations and new features!
 
